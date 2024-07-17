@@ -1,9 +1,9 @@
 # AI Innovator & Embedded Systems Expert
 
-## Masters in Electrical Engineering with major in AI and autonomous systems
+## - الیکٹریکل انجینئرنگ میں ماسٹرز
 
-## Bachelors in Mechatronics Engineering
+## - میکاٹرونکس انجینئرنگ میں بیچلرز
 
-## Currently working on library for running inference on machine learning models on ESP32
+## - فی الحال محدود وسائل والے آلات پر مشین لرننگ انفیرنس کے لیے لائبریری پر کام کر رہے ہیں
 
 
