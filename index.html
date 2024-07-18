@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name's Portfolio</title>
+    <title>Zeeshan's Portfolio</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9; color: #333; }
-        header, footer { text-align: center; padding: 1em; background-color: #222; color: #fff; }
+        header, footer { text-align: center; padding: 1em; background-color: #212; color: #fff; }
         h1, h2 { color: #333; }
         nav ul { padding: 0; }
         nav ul li { display: inline; margin-right: 10px; }
@@ -14,11 +14,21 @@
         section { margin-top: 20px; }
         article { margin-bottom: 20px; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         footer p { margin: 0; font-size: 0.8em; }
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('fonts/Montserrat-Thin.ttf') format('truetype'); /* Adjust the path as necessary */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        header h1 {
+            font-family: 'MyCustomFont', Arial, sans-serif; /* Fallback to Arial if custom font fails */
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Your Name</h1>
+        <h1>Muhammad Zeeshan Khan</h1>
         <nav>
             <ul>
                 <li><a href="#about">About Me</a></li>
@@ -32,34 +42,36 @@
     <section id="about">
         <article>
             <h2>About Me</h2>
-            <p>Your bio goes here. Summarize your background, skills, and what you are passionate about.</p>
+            <p>AI innovator and expert in low cost embedded systems, contributor in several flutter libraries dealing with BLE</p>
         </article>
     </section>
 
     <section id="experience">
         <article>
             <h2>Professional Experience</h2>
-            <p>Detail your industry experience here, focusing on key projects and roles you've handled, especially those related to AI and automation.</p>
+            <p>Most recent professional experience being Project manager for a software house managing a team of flutter developers working in IoT space.</p>
         </article>
     </section>
 
     <section id="education">
         <article>
             <h2>Education</h2>
-            <p>Outline your educational background here, highlighting your recent master's in AI and Automation and your bachelor's in Mechatronics Engineering.</p>
+            <p>- Masters in Electrical engineering with major in AI and Autonomous systems</p>
+            <p>- Bachelors in Mechatronics engineering.</p>
         </article>
     </section>
 
     <section id="projects">
         <article>
             <h2>Projects</h2>
-            <p>Describe the projects you've worked on, such as your thesis on Olive Yield Estimation, IoT dashboard applications, or any other significant projects.</p>
-        </article>
+            <p>- Real time scheduler for esp32 devices</p>
+            <p>- No code firmware generator for mock esp32 devices</p>
+            <p>- Currently working on nano machine learning library for resource costraint devices</p>
     </section>
 
     <footer>
-        <p>Contact Me: [Your Email]</p>
-        <p>© 2024 Your Name. All rights reserved.</p>
+        <p>Contact Me: zeeshanhannan@gmail.com</p>
+        <p>© 2024 muze3k All rights reserved.</p>
     </footer>
 </body>
 </html>
