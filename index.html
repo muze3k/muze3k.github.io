@@ -68,10 +68,36 @@
             <p>- No code firmware generator for mock esp32 devices</p>
             <p>- Currently working on nano machine learning library for resource costraint devices</p>
     </section>
-
     <footer>
         <p>Contact Me: zeeshanhannan@gmail.com</p>
         <p>© 2024 muze3k All rights reserved.</p>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script>
+        function setup(){
+            createCanvas(1433,500);
+            background(255);
+        }
+        function draw(){
+            //rectMode(CENTER);
+            //stroke(255,0,0,255);  // stroke(r,g,b,alpha)
+            noStroke();
+            //fill(255,125,70,255);      // fill(r,g,b,alpha)
+            //rect(50,50,20,20);      // x, y, width, height
+
+            fill(155,125,70);
+            ellipseMode(CENTER);
+            //ellipse(70,70,40,40);
+            //ellipse(mouseX,mouseY,20,20);
+            if (mouseIsPressed){
+                mouse();
+            }
+        }
+
+
+        function mouse(){
+            ellipse(mouseX,mouseY,20,20);
+        }
+    </script>
 </body>
 </html>
