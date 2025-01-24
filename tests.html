@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Call Example</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    @font-face {
+            font-family: 'MyCustomFont';
+            src: url('fonts/Montserrat-Thin.ttf') format('truetype'); /* Adjust the path as necessary */
+            font-weight: normal;
+            font-style: normal;
+        }
+  </style>
+</head>
+<body>
+    <h2>Press fetch map, then click on any square to find shortest distance. Black represents enemies, yellow moves with arrows</h2>
+    <div id="canvasContainer">
+    </div> <!-- Container for the canvas -->
+    <!--
+    <button id="fetchDataButton">Fetch Data</button>
+    <button onclick="sendData()">Calculate Route</button>
+    -->
+    <br>
+    <div>
+        <button id="fetchDataButton">
+            <span class="shadow"></span>
+            <span class="edge"></span>
+            <span class="front text"> Fetch Map
+            </span>
+          </button>
+          
+          <button onclick="sendData()">
+            <span class="shadow"></span>
+            <span class="edge"></span>
+            <span class="front text"> Find Route
+            </span>
+          </button>
+          
+    </div>
+    
+
+    <!--
+    <div>
+        <button class="btn-class-name" onclick="sendData()">
+            <span class="back"></span>
+            <span class="front"></span>
+        </button>
+    </div>
+    -->
+    
+    
+    <!--
+    <canvas id="terrainCanvas" width="500" height="500"></canvas>
+    -->
+    <script src="utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script>
+        const fetchDataButton = document.getElementById('fetchDataButton');
+        //const dataContainer = document.getElementById('dataContainer');
+        canvasSize = 600;
+        let mouseClicks = [0,0];
+        let terrainArray;
+        let enemies;
+        let player = {
+            id: 100,
+            size: 50,
+            strength: 60,
+            endurance: 70,
+            locx: 28,
+            locy: 28,
+            drawPlayer: function(terrainArray){
+                const rows = terrainArray.length;
+                const cols = terrainArray[0].length;
+
+                // Calculate cell size based on canvas dimensions
+                const cellWidth = canvas.width / cols;
+                const cellHeight = canvas.height / rows;
+                fill('yellow');
+                //circle(enemy[i][0] * cellWidth/2, enemy[i][1] * cellHeight/2, 5);
+                circle(this.locx*cellWidth/2 + cellHeight/4, this.locy*cellHeight/2 + cellWidth/4, cellHeight/4);
+                //console.log("Drawing the player at:", this.locx, ",", this.locy);
+            }
+        };
+
+        function setup(){
+            const canvas = createCanvas(canvasSize,canvasSize);
+            canvas.parent('canvasContainer'); // Specify the parent element
+            noStroke();
+            background(125);
+        }
+
+        async function fetchTerrainData() {
+                try {
+                    const response = await fetch('https://muze3k.pythonanywhere.com/Map');
+                    const data = await response.json();
+                    const terrainArray = data.data; // Assuming the API returns { data: [...] }
+                    const enemies = data.enemies;
+                    
+                    // Render the terrain map
+                    //renderTerrain(terrainArray);
+                    return [terrainArray, enemies];
+                } catch (error) {
+                    console.error('Error fetching terrain data:', error);
+                }
+            }
+        //terrainArray = generateRandom2DArray(30, 30, 20, 230)  // (rows, cols, min, max)
+        //enemy = enemies
+        
+        function mouseClicked() {
+            if (mouseX<canvasSize && mouseY<canvasSize && mouseX>0 && mouseY>0){
+                row = Math.floor(mouseX/(canvasSize/terrainArray.length));
+                col = Math.floor(mouseY/(canvasSize/terrainArray.length));
+                mouseClicks = [row, col];
+                console.log("mouse pressed at: ", mouseX, mouseY);
+            }
+        }
+
+
+        function draw(){
+
+            //renderMap(terrainArray);
+            //console.log("this is enemies--->", enemies);
+            if (typeof terrainArray !== 'undefined') {
+                player.drawPlayer(terrainArray);
+            }
+
+            // Update x and y if an arrow key is pressed.
+            if (keyIsDown(LEFT_ARROW) === true) {
+                background(125);
+                player.locx -= 0.1;
+                renderMap(terrainArray, enemies);
+            }
+
+            if (keyIsDown(RIGHT_ARROW) === true) {
+                background(125);
+                player.locx += 0.1;
+                renderMap(terrainArray, enemies);
+            }
+
+            if (keyIsDown(UP_ARROW) === true) {
+                background(125);
+                player.locy -= 0.1;
+                renderMap(terrainArray, enemies);
+            }
+
+            if (keyIsDown(DOWN_ARROW) === true) {
+                background(125);
+                player.locy += 0.1;
+                renderMap(terrainArray, enemies);
+            }
+
+
+        }
+
+        fetchDataButton.addEventListener('click', async() => {
+            fetchedResponse = await fetchTerrainData();   // fetchTerrainData returns a list where first element is the terrain and second is the enemies list
+            terrainArray = fetchedResponse[0]
+            enemies = fetchedResponse[1]
+            //console.log("this is terrain array --->", terrainArray);
+            //console.log("this is enemies list----->", enemies);
+            renderMap(terrainArray, enemies);
+        })
+
+        //calcDist.addEventListener('click', async() => {
+        //    
+        //    xValue = mouseClicks[0];
+        //    yValue = mouseClicks[1];
+        //    calcRoute = await fetchRoute(xValue,yValue, player.locx, player.locy);
+        //})
+
+        function sendData() {
+            // Define the data to send
+            const data = {
+                enemyx: mouseClicks[0],
+                enemyy: mouseClicks[1],
+                playerx: Math.floor(player.locx),
+                playery: Math.floor(player.locy),
+                mapArray: terrainArray,
+                mapSize: terrainArray.length
+            };
+            
+            // Send a POST request to the Flask server
+            fetch('https://muze3k.pythonanywhere.com/getPath', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(result => {
+                //console.log('Result from Flask:', result);
+                //alert(`Sum: ${result.sum}, List Length: ${result.list_length}, Modified List: ${result.modified_list}`);
+                stroke('black');
+                strokeWeight(2);
+                prevX = 0;
+                prevY= 0;
+                for (let i=0; i<result.path.length; i++){
+                    //console.log("go to node ---> ", result.path[i]);
+                    //row1 = int(result.path[i]/mapSize)
+                    row1 = (Math.floor(result.path[i]/terrainArray.length)*((600/terrainArray.length))) + ( (600/terrainArray.length)/2 )  // 600 is the canvas size
+                    col1 = ( (result.path[i] - ((Math.floor(result.path[i]/terrainArray.length))*terrainArray.length))*((600/terrainArray.length)) ) + ( (600/terrainArray.length)/2 );
+                    if (i+1 !== result.path.length){
+                        row2 = (Math.floor(result.path[i+1]/terrainArray.length)*((600/terrainArray.length))) + ( (600/terrainArray.length)/2 )  // 600 is the canvas size
+                        col2 = ( (result.path[i+1] - ((Math.floor(result.path[i+1]/terrainArray.length))*terrainArray.length))*((600/terrainArray.length)) ) + ( (600/terrainArray.length)/2 );
+                        //console.log("draw line from ", row1, "," , col1, ",", row2, ",", col2);
+                        line(row1, col1, row2, col2);  // (x1,y1,x2,y2)
+                    }
+                    prevX = row1;
+                    prevY = col1;
+                }
+                playerXPosition = (player.locx*((600/terrainArray.length))) + ( (600/terrainArray.length)/2 );
+                playerYPosition = ( (player.locy)*((600/terrainArray.length)) ) + ( (600/terrainArray.length)/2 );
+                line(prevX, prevY, playerXPosition, playerYPosition);
+                alert("Shortest route found");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+    </script>
+
+</body>
+</html>
